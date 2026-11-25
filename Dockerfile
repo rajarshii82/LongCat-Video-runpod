@@ -18,19 +18,20 @@ RUN apt-get update && \
     libglib2.0-0 && \
     rm -rf /var/lib/apt/lists/*
 
-COPY . /app
-
 RUN pip install --no-cache-dir \
     ninja packaging psutil
+
+COPY requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir \
     -r requirements.txt
 
-RUN FLASH_ATTENTION_FORCE_BUILD=TRUE \
-    pip install --no-cache-dir \
+RUN pip install --no-cache-dir \
     flash-attn==2.8.3 \
     --no-build-isolation
 
 RUN pip check
+
+COPY . /app
 
 CMD ["python", "-u", "handler.py"]
